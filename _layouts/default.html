@@ -2,17 +2,108 @@
 <html>
 
   {% include head.html %}
+  
+  <style>
+    
+   label {
+     font-size: 16px;
+     font-weight: bold;
+     margin-right: 10px; 
+   }
+   
+  
+   select {
+     font-size: 16px;
+     padding: 8px 20px;
+     border: 1px solid #ccc;
+     border-radius: 5px;
+     cursor: pointer;
+     appearance: none;
+     background-color: #f7f7f7;
+     color: #333;
+   }
+   
+   select:hover {
+     border-color: #999;
+   }
+   
+   
+   select:focus {
+     border-color: #66afe9;
+     outline: 0;
+     box-shadow: 0 0 5px rgba(102, 175, 233, 0.5);
+   }
+   select option {
+     font-size: 14px;
+   }
+   
+   select::after {
+     content: '\25BC';
+     position: absolute;
+     top: calc(50% - 8px);
+     right: 10px;
+     color: #666;
+     pointer-events: none;
+   }
+   
+   
+   </style>
+   
 
   <body>
+    
 
     <div class="container-fluid">
       <div class="row">
         {{ content }}
       </div>
     </div>
-  
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    
+    <label for="position-filter">Filter by Position:</label>
+  <select id="position-filter">
+    <option value="all">All</option>
+    <option value="PhD">PhD</option>
+    <option value="MS(R)">MS(R)</option>
+    <option value="UG">UG</option>
+  </select>
+
+  <div id="members-container">
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+
+  <script>
+   $(document).ready(function() {
+  $("#position-filter").change(function() {
+    var selectedPosition = $(this).val();
+    if (selectedPosition === "all") {
+      $(".member").show();
+    } else {
+      $(".member").hide();
+      if (selectedPosition === "UG") {
+        // Show both PhD and UG members
+        $(".member").each(function() {
+          var positionText = $(this).find("p i").text();
+          if (positionText.indexOf("PhD") !== -1 || positionText.indexOf("Undergraduate") !== -1) {
+            $(this).show();
+          }
+        });
+      } else {
+        $(".member").each(function() {
+          if ($(this).find("p i").text().indexOf(selectedPosition) !== -1) {
+            $(this).show();
+          }
+        });
+      }
+    }
+  });
+});
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="{{ site.url }}{{ site.baseurl }}/js/bootstrap.min.js"></script>
+  
+    
 
   </body>
 
